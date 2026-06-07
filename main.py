@@ -7,7 +7,7 @@ from infrastructure.provider.user_provider import register_user_di
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Media Project Management System",
+    title="Meeting Project Management System",
     description="Clean Architecture implementation with FastAPI",
     version="1.0.0"
 )

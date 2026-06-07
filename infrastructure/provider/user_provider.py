@@ -1,12 +1,14 @@
 
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
+from application.usecases.get_user_usecase import GetMeUseCase
 from application.usecases.login_user_usercase import LoginUseCase
 from infrastructure.database import get_db_session
 from infrastructure.repository.user_reposiry import PostgresUserRepository
 from infrastructure.security import BcryptPasswordHasher, JwtTokenService
 from application.usecases.register_user_usecase import RegisterUserUseCase
-from presentation.router.user_router import get_login_use_case_stub, get_register_use_case_stub
+from presentation.router.user_router import get_current_user_id_stub, get_login_use_case_stub, get_register_use_case_stub, get_me_use_case_stub
+from infrastructure.auth_gaurd import get_real_current_user_id  
 
 
 
@@ -27,6 +29,13 @@ def get_real_login_use_case():
     )
 
 
+def get_real_me_use_case():
+    db_session = next(get_db_session())
+    user_repo = PostgresUserRepository(db_session)
+    return GetMeUseCase(user_repository=user_repo)
+
 def register_user_di(app: FastAPI):
     app.dependency_overrides[get_register_use_case_stub] = get_real_register_use_case
     app.dependency_overrides[get_login_use_case_stub] = get_real_login_use_case
+    app.dependency_overrides[get_me_use_case_stub] = get_real_me_use_case
+    app.dependency_overrides[get_current_user_id_stub] = get_real_current_user_id
