@@ -1,5 +1,4 @@
 import jwt
-from passlib.context import CryptContext
 import bcrypt # pip install bcrypt
 from datetime import datetime, timedelta
 
@@ -11,15 +10,20 @@ SECRET_KEY = "your_super_secret_key_change_me_in_production"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class BcryptPasswordHasher(IPasswordHasher):
     def hash_password(self, password: str) -> str:
+        password_bytes = password.encode('utf-8')[:72]
         salt = bcrypt.gensalt()
-        return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
+        return bcrypt.hashpw(password_bytes, salt).decode('utf-8')
 
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
-        return pwd_context.verify(plain_password, hashed_password)
+        try:
+            password_bytes = plain_password.encode('utf-8')[:72]
+            hashed_bytes = hashed_password.encode('utf-8')
+            return bcrypt.checkpw(password_bytes, hashed_bytes)
+        except Exception:
+            return False
 
 
 class JwtTokenService(ITokenService):
