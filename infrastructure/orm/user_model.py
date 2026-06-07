@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String, Enum, DateTime
 from datetime import datetime
 
-from domain.entity.user_entity  import Role, UserStatus
+from domain.entity.user_entity  import Role
 from ..database import Base
 
 
@@ -16,5 +16,5 @@ class UserModel(Base):
     password_hash = Column(String, nullable=False)
     role = Column(Enum(Role), nullable=False)
     is_active = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.now(datetime.timezone.utc))
-    update_at = Column(DateTime, default=datetime.now(datetime.timezone.utc), onupdate=datetime.now(datetime.timezone.utc))
+    created_at = Column(DateTime, default=datetime.utcnow)
+    update_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

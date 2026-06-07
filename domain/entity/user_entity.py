@@ -18,8 +18,8 @@ class User:
     role: Role
     is_active: bool = False
     id: Optional[int] = None
-    created_at: datetime = field(default_factory=datetime.now(datetime.timezone.utc))
-    update_at: datetime = field(default_factory=datetime.now(datetime.timezone.utc))
+    created_at: datetime = field(default_factory=datetime.utcnow)
+    update_at: datetime = field(default_factory=datetime.utcnow)
 
     def activate(self):
         self.is_active = True 
