@@ -10,18 +10,20 @@ class IPasswordHasher:
 
 @dataclass
 class RegisterUserRequestInput:
-    full_name: str
+    first_name: str
+    last_name: str
+    username: str
     email: str
     password: str
-    phone_number: str
     role: Role
 
 @dataclass
 class RegisterUserResponseOutput:
     id: int
     email: str
+    username: str
     role: str
-    status: str
+    is_active: bool
 
 
 
@@ -32,7 +34,7 @@ class RegisterUserUseCase:
 
     def execute(self, request: RegisterUserRequestInput) -> RegisterUserResponseOutput:
         # 1. Check if user exists
-        existing_user = self.user_repository.find_by_email(request.email)
+        existing_user = self.user_repository.find_by_username(request.username)
         if existing_user:
             raise ValueError("Email already in use")
 
@@ -41,10 +43,11 @@ class RegisterUserUseCase:
 
         # 3. Create Entity
         new_user = User(
-            full_name=request.full_name,
+            first_name=request.first_name,
+            last_name=request.last_name,
+            username=request.username,
             email=request.email,
             password_hash=hashed_password,
-            phone_number=request.phone_number,
             role=request.role
         )
 

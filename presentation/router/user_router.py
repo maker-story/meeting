@@ -17,10 +17,11 @@ def register_user(
 ):
     try:
         dto_request = RegisterUserRequestInput(
-            full_name=request.full_name,
+            first_name=request.first_name,
+            last_name=request.last_name,
+            username=request.username,
             email=request.email,
             password=request.password,
-            phone_number=request.phone_number,
             role=request.role
         )
         

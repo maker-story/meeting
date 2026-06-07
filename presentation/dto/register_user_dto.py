@@ -3,15 +3,17 @@ from pydantic import BaseModel, EmailStr
 from domain.entity.user_entity import Role
 
 class RegisterRequestDTO(BaseModel):
-    full_name: str
+    first_name: str
+    last_name: str
+    username: str
     email: EmailStr
     password: str
-    phone_number: str
     role: Role
 
 class RegisterResponseDTO(BaseModel):
     id: int
     email: str
+    username: str
     role: str
-    status: str
+    is_active: bool
     message: str

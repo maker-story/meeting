@@ -8,7 +8,8 @@ class UserPresenter:
         return RegisterResponseDTO(
             id=dto.id,
             email=dto.email,
+            username=dto.username,
             role=dto.role,
-            status=dto.status,
+            is_active=dto.is_active,
             message="User registered successfully."
         )

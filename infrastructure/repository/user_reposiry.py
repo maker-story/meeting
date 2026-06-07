@@ -9,13 +9,15 @@ class PostgresUserRepository(IUserRepository):
 
     def save(self, user: User) -> User:
         db_user = UserModel(
-            full_name=user.full_name,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            username=user.username,
             email=user.email,
             password_hash=user.password_hash,
-            phone_number=user.phone_number,
             role=user.role,
-            status=user.status,
-            created_at=user.created_at
+            is_active=user.is_active,
+            created_at=user.created_at,
+            update_at=user.update_at
         )
         self.db_session.add(db_user)
         self.db_session.commit()
@@ -24,17 +26,19 @@ class PostgresUserRepository(IUserRepository):
         user.id = db_user.id # Map DB ID back to Entity
         return user
 
-    def find_by_email(self, email: str) -> User | None:
-        db_user = self.db_session.query(UserModel).filter(UserModel.email == email).first()
+    def find_by_username(self, username: str) -> User | None:
+        db_user = self.db_session.query(UserModel).filter(UserModel.username == username).first()
         if not db_user:
             return None
         return User(
             id=db_user.id,
-            full_name=db_user.full_name,
+            first_name=db_user.first_name,
+            last_name=db_user.last_name,
+            username=db_user.username,
             email=db_user.email,
             password_hash=db_user.password_hash,
-            phone_number=db_user.phone_number,
             role=db_user.role,
-            status=db_user.status,
-            created_at=db_user.created_at
+            is_active=db_user.is_active,
+            created_at=db_user.created_at,
+            update_at=db_user.update_at
         )

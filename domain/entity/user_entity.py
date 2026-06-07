@@ -5,27 +5,23 @@ from enum import Enum
 
 class Role(str, Enum):
     Admin = "Admin"
-    Customer = "Customer"
-    Freelancer = "Freelancer"
-    Supervisor = "Supervisor"
+    User = "User"
 
-class UserStatus(str, Enum):
-    Pending = "Pending"
-    Active = "Active"
-    Blocked = "Blocked"
 
 @dataclass
 class User:
-    full_name: str
+    first_name: str
+    last_name: str
     email: str
+    username: str
     password_hash: str
-    phone_number: str
     role: Role
+    is_active: bool = False
     id: Optional[int] = None
-    status: UserStatus = UserStatus.Pending
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=datetime.now(datetime.timezone.utc))
+    update_at: datetime = field(default_factory=datetime.now(datetime.timezone.utc))
 
     def activate(self):
-        self.status = UserStatus.Active
+        self.is_active = True 
 
 
