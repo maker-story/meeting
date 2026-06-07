@@ -36,7 +36,7 @@ class RegisterUserUseCase:
         # 1. Check if user exists
         existing_user = self.user_repository.find_by_username(request.username)
         if existing_user:
-            raise ValueError("Email already in use")
+            raise ValueError("Username already in use")
 
         # 2. Hash password
         hashed_password = self.password_hasher.hash(request.password)
@@ -59,5 +59,6 @@ class RegisterUserUseCase:
             id=saved_user.id,
             email=saved_user.email,
             role=saved_user.role.value,
-            status=saved_user.status.value
+            is_active=saved_user.is_active,
+            username=saved_user.username
         )
