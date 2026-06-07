@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Enum, DateTime
 from datetime import datetime
-from domain.user.user_enums  import Role, UserStatus
+
+from domain.entity.user_entity  import Role, UserStatus
 from ..database import Base
 
 

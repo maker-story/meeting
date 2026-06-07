@@ -1,6 +1,9 @@
+
 from abc import ABC, abstractmethod
 from typing import Optional
-from .user_entities import User
+
+from domain.entity.user_entity import User
+
 
 class IUserRepository(ABC):
     @abstractmethod

@@ -1,7 +1,18 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
-from .user_enums import Role, UserStatus
+from enum import Enum
+
+class Role(str, Enum):
+    Admin = "Admin"
+    Customer = "Customer"
+    Freelancer = "Freelancer"
+    Supervisor = "Supervisor"
+
+class UserStatus(str, Enum):
+    Pending = "Pending"
+    Active = "Active"
+    Blocked = "Blocked"
 
 @dataclass
 class User:
@@ -16,3 +27,5 @@ class User:
 
     def activate(self):
         self.status = UserStatus.Active
+
+

@@ -1,4 +1,4 @@
-from application.user.usecases.auth_usecase import IPasswordHasher
+from application.usecases.register_user_usecase import IPasswordHasher
 import bcrypt # pip install bcrypt
 
 class BcryptPasswordHasher(IPasswordHasher):

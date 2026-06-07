@@ -1,21 +1,22 @@
 from fastapi import APIRouter, Depends, HTTPException
-from presentation.user.user_schemas import RegisterRequestSchema, RegisterResponseSchema
-from presentation.user.user_presenters import UserPresenter
-from application.user.dtos import RegisterUserRequestDTO
-from application.user.usecases.auth_usecase import RegisterUserUseCase
+
+from presentation.dto.register_user_dto import RegisterRequestDTO, RegisterResponseDTO 
+from presentation.presenter.register_user_presenter import UserPresenter
+from application.usecases.register_user_usecase import RegisterUserRequestInput  
+from application.usecases.register_user_usecase import RegisterUserUseCase
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 def get_register_use_case_stub() -> RegisterUserUseCase:
     raise NotImplementedError("This dependency must be overridden by the Composition Root.")
 
-@router.post("/register", response_model=RegisterResponseSchema)
+@router.post("/register", response_model=RegisterResponseDTO)
 def register_user(
-    request: RegisterRequestSchema,
+    request: RegisterRequestDTO,
     use_case: RegisterUserUseCase = Depends(get_register_use_case_stub)
 ):
     try:
-        dto_request = RegisterUserRequestDTO(
+        dto_request = RegisterUserRequestInput(
             full_name=request.full_name,
             email=request.email,
             password=request.password,
