@@ -1,5 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
+from starlette import status
 
+
+from application.usecases.login_user_usercase import LoginRequestInput, LoginUseCase
+from presentation.dto.login_user_dto import LoginRequestDTO, LoginResponseDTO
 from presentation.dto.register_user_dto import RegisterRequestDTO, RegisterResponseDTO 
 from presentation.presenter.register_user_presenter import UserPresenter
 from application.usecases.register_user_usecase import RegisterUserRequestInput  
@@ -31,3 +35,31 @@ def register_user(
         
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+
+##################################################################################################################
+
+def get_login_use_case_stub() -> RegisterUserUseCase:
+    raise NotImplementedError("This dependency must be overridden by the Composition Root.")
+
+
+@router.post("/login", response_model=LoginResponseDTO)
+def login_user(
+    request: LoginRequestDTO,
+    use_case: LoginUseCase = Depends(get_login_use_case_stub)
+):
+    try:
+        dto_request = LoginRequestInput(
+            username=request.username,
+            password=request.password
+        )
+        dto_response = use_case.execute(dto_request)
+        return dto_response
+
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=str(e),
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+

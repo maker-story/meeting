@@ -1,11 +1,18 @@
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from domain.entity.user_entity import User
 from domain.repository_interface.user_repository import IUserRepository
 from domain.entity.user_entity import Role
 
-class IPasswordHasher:
-    def hash(self, password: str) -> str: pass
+class IPasswordHasher(ABC):
+    @abstractmethod
+    def hash_password(self, password: str) -> str:
+        pass
+
+    @abstractmethod
+    def verify_password(self, plain_password: str, hashed_password: str) -> bool:
+        pass
 
 
 @dataclass
@@ -39,7 +46,7 @@ class RegisterUserUseCase:
             raise ValueError("Username already in use")
 
         # 2. Hash password
-        hashed_password = self.password_hasher.hash(request.password)
+        hashed_password = self.password_hasher.hash_password(request.password)
 
         # 3. Create Entity
         new_user = User(
