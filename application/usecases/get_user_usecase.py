@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from domain.entity.user_entity import Role
-from  domain.repository_interface.user_repository import IUserRepository
+from  domain.repository_interface.user_repository_interface import IUserRepository
 
 @dataclass
 class GetMeRequestInput:

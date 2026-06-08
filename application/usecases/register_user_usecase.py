@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from domain.entity.user_entity import User
-from domain.repository_interface.user_repository import IUserRepository
+from domain.repository_interface.user_repository_interface import IUserRepository
 from domain.entity.user_entity import Role
 
 class IPasswordHasher(ABC):

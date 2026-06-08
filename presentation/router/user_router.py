@@ -6,8 +6,10 @@ from starlette import status
 
 from application.usecases.get_user_usecase import GetMeRequestInput
 from application.usecases.login_user_usercase import LoginRequestInput, LoginUseCase
+from application.usecases.refresh_token_usecase import RefreshTokenRequestInput, RefreshTokenUseCase
 from presentation.dto.get_user_dto import GetMeResponseDTO
 from presentation.dto.login_user_dto import LoginRequestDTO, LoginResponseDTO
+from presentation.dto.refresh_token_dto import RefreshTokenRequestDTO, RefreshTokenResponseDTO
 from presentation.dto.register_user_dto import RegisterRequestDTO, RegisterResponseDTO 
 from presentation.presenter.register_user_presenter import UserPresenter
 from application.usecases.register_user_usecase import RegisterUserRequestInput  
@@ -91,3 +93,20 @@ def get_current_user_profile(
         return dto_response
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+
+
+##################################################################################################################
+
+def get_refresh_token_use_case_stub() -> RefreshTokenUseCase:
+    raise NotImplementedError("This dependency must be overridden by the Composition Root.")
+
+@router.post("/refresh", response_model=RefreshTokenResponseDTO)
+def refresh_token(
+    request: RefreshTokenRequestDTO,
+    use_case: RefreshTokenUseCase = Depends(get_refresh_token_use_case_stub)
+):
+    try:
+        dto_request = RefreshTokenRequestInput(refresh_token=request.refresh_token)
+        return use_case.execute(dto_request)
+    except ValueError as e:
+        raise HTTPException(status_code=401, detail=str(e))
