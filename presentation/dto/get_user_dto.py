@@ -13,6 +13,3 @@ class GetMeResponseDTO(BaseModel):
     role: str
     created_at: datetime
     update_at: datetime
-
-    class Config:
-        from_attributes = True

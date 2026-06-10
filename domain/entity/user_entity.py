@@ -6,6 +6,7 @@ from enum import Enum
 class Role(str, Enum):
     Admin = "Admin"
     User = "User"
+    Host = "Host"
 
 
 @dataclass

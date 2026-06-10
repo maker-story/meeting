@@ -11,10 +11,8 @@ ALGORITHM = "HS256"
 def get_real_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(security_scheme)) -> int:
     token = credentials.credentials
 
-    print("Received token:", token)  # Debugging line
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print("Decoded JWT payload:", payload)  # Debugging line
         user_id: str = payload.get("sub")
         if user_id is None:
             raise HTTPException(
@@ -28,7 +26,6 @@ def get_real_current_user_id(credentials: HTTPAuthorizationCredentials = Depends
             detail="token has expired",
         )
     except jwt.PyJWTError as e:
-        print("JWT Error details:", str(e))
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="token verification failed",

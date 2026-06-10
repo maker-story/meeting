@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from domain.repository_interface.refresh_token_repository_interface import IRefreshTokenRepository
-from infrastructure.orm.refresh_token import RefreshTokenModel
+from infrastructure.orm.refresh_token_model import RefreshTokenModel
 
 class PostgresRefreshTokenRepository(IRefreshTokenRepository):
     def __init__(self, db_session: Session):

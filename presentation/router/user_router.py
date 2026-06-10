@@ -1,17 +1,16 @@
-from urllib import request
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette import status
 
-
 from application.usecases.get_user_usecase import GetMeRequestInput
 from application.usecases.login_user_usercase import LoginRequestInput, LoginUseCase
+from application.usecases.logout_user_usecase import LogoutRequestInput, LogoutUseCase
 from application.usecases.refresh_token_usecase import RefreshTokenRequestInput, RefreshTokenUseCase
 from presentation.dto.get_user_dto import GetMeResponseDTO
 from presentation.dto.login_user_dto import LoginRequestDTO, LoginResponseDTO
 from presentation.dto.refresh_token_dto import RefreshTokenRequestDTO, RefreshTokenResponseDTO
 from presentation.dto.register_user_dto import RegisterRequestDTO, RegisterResponseDTO 
-from presentation.presenter.register_user_presenter import UserPresenter
+from presentation.presenter.user_presenter import UserPresenter
 from application.usecases.register_user_usecase import RegisterUserRequestInput  
 from application.usecases.register_user_usecase import RegisterUserUseCase
 
@@ -62,7 +61,7 @@ def login_user(
             password=request.password
         )
         dto_response = use_case.execute(dto_request)
-        return dto_response
+        return UserPresenter.format_login_response(dto_response)
 
     except ValueError as e:
         raise HTTPException(
@@ -107,6 +106,25 @@ def refresh_token(
 ):
     try:
         dto_request = RefreshTokenRequestInput(refresh_token=request.refresh_token)
-        return use_case.execute(dto_request)
+        dto_response = use_case.execute(dto_request)
+        return dto_response
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))
+
+##################################################################################################################
+def get_logout_use_case_stub() -> LogoutUseCase:
+    raise NotImplementedError("This dependency must be overridden by the Composition Root.")
+
+
+@router.post("/logout")
+def logout_user(
+    request: RefreshTokenRequestDTO, 
+    current_user_id: int = Depends(get_current_user_id_stub), 
+    use_case: LogoutUseCase = Depends(get_logout_use_case_stub)
+):
+    try:
+        dto_request = LogoutRequestInput(user_id=current_user_id, refresh_token=request.refresh_token)
+        use_case.execute(dto_request)
+        return {"detail": "Successfully logged out"}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))

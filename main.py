@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from infrastructure.database import Base, engine
+
 from presentation.router.user_router import router as user_router
+from presentation.router.meet_router import router as meet_router
 from infrastructure.provider.user_provider import register_user_di
+from infrastructure.provider.meet_provider import register_meet_di 
 
 
 Base.metadata.create_all(bind=engine)
@@ -13,4 +16,6 @@ app = FastAPI(
 )
 
 app.include_router(user_router)
+app.include_router(meet_router)
 register_user_di(app)
+register_meet_di(app)
