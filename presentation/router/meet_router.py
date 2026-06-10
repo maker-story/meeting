@@ -3,7 +3,6 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.exceptions import HTTPException
 
 from application.usecases.create_meet_usecase import CreateMeetRequestInput, CreateMeetUseCase
-from application.usecases.register_user_usecase import RegisterUserUseCase
 from presentation.dto.create_meet_dto import CreateMeetRequestDTO, CreateMeetResponseDTO
 from presentation.presenter.meet_presenter import MeetPresenter
 
